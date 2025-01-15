@@ -29,10 +29,7 @@ def root = project.rootProject.hasProperty(["docker-repository-root"]) ?
 def tag = project.rootProject.hasProperty(["docker-tag"]) ?
                     project.rootProject["docker-tag"] : project.sdk_version
 
-def base = containerImageName(
-            name: base_name,
-            root: root,
-            tag: tag)
+def base = project.findProperty("docker-distroless-base")
 
 docker {
     name containerImageName(
@@ -48,6 +45,3 @@ docker {
     load project.useBuildx() && !pushContainers
     push pushContainers
 }
-
-dockerPrepare.dependsOn ":sdks:python:container:py${pythonVersionSuffix}:docker"
-
