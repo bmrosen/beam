@@ -54,11 +54,13 @@ GCS_LOCATION=${GCS_LOCATION:-gs://temp-storage-for-end-to-end-tests}
 PROJECT=${PROJECT:-apache-beam-testing}
 REGION=${REGION:-us-central1}
 IMAGE_PREFIX="$(grep 'docker_image_default_repo_prefix' gradle.properties | cut -d'=' -f2)"
+if [[ -n "$IMAGE_SUFFIX" ]]; then
+  IMAGE_SUFFIX="_${IMAGE_SUFFIX}"
+fi
 SDK_VERSION="$(grep 'sdk_version' gradle.properties | cut -d'=' -f2)"
 PY_VERSION=$1
 ARCH=${3:-"x86"}
-IMAGE_SUFFIX=$4
-IMAGE_NAME="${IMAGE_PREFIX}python${PY_VERSION}_sdk_${IMAGE_SUFFIX}"
+IMAGE_NAME="${IMAGE_PREFIX}python${PY_VERSION}_sdk${IMAGE_SUFFIX}"
 CONTAINER_PROJECT="sdks:python:container:py${PY_VERSION//.}"  # Note: we substitute away the dot in the version.
 PY_INTERPRETER="python${PY_VERSION}"
 MACHINE_TYPE_ARGS=""
